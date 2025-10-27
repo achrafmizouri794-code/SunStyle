@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SunStyle.tn</title>
+<style>
+body { margin:0; font-family:sans-serif; background:#111; color:#f5f5f5; }
+a { text-decoration:none; }
+header { background:#000; padding:1rem; display:flex; justify-content:space-between; align-items:center; }
+header h1 { color:#FFD700; margin:0; }
+nav a { margin:0 0.5rem; color:#f5f5f5; }
+.banner { background:#000; color:#FFD700; text-align:center; padding:4rem 1rem; }
+.banner h2 { font-size:2.5rem; margin-bottom:0.5rem; opacity:0; animation:fadeIn 1s forwards; }
+.banner p { font-size:1.2rem; margin-bottom:1rem; opacity:0; animation:fadeIn 1s 0.3s forwards; }
+.banner a { background:#FFD700; color:#000; padding:0.5rem 1.5rem; border-radius:999px; font-weight:bold; display:inline-block; transition:transform 0.3s; }
+.banner a:hover { transform:scale(1.05); }
+@keyframes fadeIn { to { opacity:1; } }
+.section { max-width:1200px; margin:2rem auto; padding:0 1rem; }
+.offer { background:#FFD700; color:#000; padding:2rem; text-align:center; border-radius:1rem; margin-bottom:2rem; }
+.products { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:1rem; }
+.product { background:#222; padding:1rem; border-radius:1rem; transition:transform 0.3s; }
+.product:hover { transform:scale(1.05); }
+.product img { width:100%; border-radius:0.5rem; margin-bottom:0.5rem; }
+.product h3 { color:#FFD700; margin:0 0 0.5rem 0; }
+.product p { font-size:0.9rem; margin:0 0 0.5rem 0; color:#ccc; }
+.product .price-old { text-decoration: line-through; color:#888; margin-bottom:0.2rem; }
+.product .price-new { font-weight:bold; color:#FFD700; margin-bottom:0.5rem; }
+.product button { background:#FFD700; color:#000; padding:0.3rem 1rem; border:none; border-radius:0.5rem; cursor:pointer; font-weight:bold; }
+footer { background:#000; color:#888; text-align:center; padding:1rem; margin-top:2rem; }
+input, textarea, select { padding:0.5rem; border-radius:0.5rem; border:none; margin:0.3rem 0; width:100%; }
+.admin-section { background:#222; padding:1rem; border-radius:1rem; margin-bottom:2rem; }
+.admin-section h3 { color:#FFD700; margin-bottom:1rem; }
+.admin-section button { background:#FFD700; color:#000; padding:0.5rem 1rem; border:none; border-radius:0.5rem; cursor:pointer; font-weight:bold; margin-top:0.5rem; }
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; }
+.modal-content { background:#222; padding:2rem; border-radius:1rem; width:90%; max-width:400px; }
+.modal-content h3 { color:#FFD700; margin-bottom:1rem; }
+.modal-content input { margin-bottom:0.5rem; }
+</style>
+</head>
+<body>
+<header>
+<h1>SunStyle.tn</h1>
+<nav>
+<a href="#">Accueil</a>
+<a href="#products">Produits</a>
+<a href="#about">À propos</a>
+<a href="#contact">Contact</a>
+<a href="#admin">Admin</a>
+</nav>
+</header>
+<section class="banner">
+<h2>Découvrez vos lunettes parfaites avec SunStyle</h2>
+<p>Élégance, qualité et prix abordable.</p>
+<a href="#products">Shop Now</a>
+</section>
+<section class="section offer">
+<h3>Offre spéciale -20% sur une sélection de modèles</h3>
+<p>Profitez vite de cette promotion exclusive sur nos modèles les plus élégants !</p>
+</section>
+<section class="section products" id="products"></section>
+<section class="section" id="cart">
+<h3 style="color:#FFD700;">Panier</h3>
+<ul id="cart-items"></ul>
+<p id="cart-total" style="font-weight:bold;"></p>
+<button onclick="openCheckout()" style="background:#FFD700;color:#000;padding:0.5rem 1rem;border:none;border-radius:0.5rem;cursor:pointer;">Valider le panier</button>
+</section>
+<section class="section" id="about">
+<h3 style="color:#FFD700;">À propos</h3>
+<p id="about-text">SunStyle.tn est spécialisé dans la vente de lunettes de soleil imitation de haute qualité. Nous combinons style, confort et protection solaire avec la possibilité de paiement à la livraison en Tunisie.</p>
+</section>
+<section class="section" id="contact">
+<h3 style="color:#FFD700;">Contact</h3>
+<p id="contact-text">Pour commandes ou informations: +216 99 000 000 (exemple)</p>
+<p id="contact-email" id="store-email">Email: info@sunstyle.tn (exemple)</p>
+</section>
+<section class="section admin-section" id="admin">
+<h3>Administration</h3>
+<h4>Produits</h4>
+<input type="text" id="new-name" placeholder="Nom du produit">
+<input type="number" id="new-price" placeholder="Prix">
+<input type="number" id="new-discount" placeholder="Remise (%)">
+<input type="number" id="new-stock" placeholder="Stock">
+<input type="text" id="new-desc" placeholder="Description">
+<input type="text" id="new-img" placeholder="URL de l'image">
+<button onclick="addProduct()">Ajouter un produit</button>
+<h4>Modifier produit</h4>
+<select id="edit-select"></select>
+<input type="text" id="edit-name" placeholder="Nom du produit">
+<input type="number" id="edit-price" placeholder="Prix">
+<input type="number" id="edit-discount" placeholder="Remise (%)">
+<input type="number" id="edit-stock" placeholder="Stock">
+<input type="text" id="edit-desc" placeholder="Description">
+<input type="text" id="edit-img" placeholder="URL de l'image">
+<button onclick="editProduct()">Modifier le produit</button>
+<h4>Commandes</h4>
+<ul id="orders-list"></ul>
+<h4>Actions sur les commandes</h4>
+<button onclick="approveOrder()">Approuver la commande sélectionnée</button>
+<button onclick="cancelOrder()">Annuler la commande sélectionnée</button>
+<h4>Modifier texte et email du site</h4>
+<textarea id="admin-about" placeholder="À propos"></textarea>
+<textarea id="admin-contact" placeholder="Contact"></textarea>
+<input type="email" id="admin-email" placeholder="Adresse email du magasin">
+<button onclick="updateSiteTextHandler()">Mettre à jour le site</button>
+</section>
+<div class="modal" id="checkout-modal">
+<div class="modal-content">
+<h3>Informations du client</h3>
+<input type="text" id="client-name" placeholder="Nom complet">
+<input type="text" id="client-phone" placeholder="Téléphone">
+<input type="email" id="client-email" placeholder="Email">
+<input type="text" id="client-address" placeholder="Adresse">
+<button onclick="confirmOrder()">Confirmer la commande</button>
+<button onclick="closeCheckout()" style="margin-top:0.5rem;">Annuler</button>
+</div>
+</div>
+<footer>
+© 2025 SunStyle.tn — Tous droits réservés
+<div style="margin-top:1rem;">
+<a href="https://facebook.com/votrepage" target="_blank">Facebook</a> |
+<a href="https://instagram.com/votrepage" target="_blank">Instagram</a> |
+<a href="https://wa.me/21699000000" target="_blank">WhatsApp</a>
+</div>
+</footer>
+<script>
+let products = [];
+let cart = [];
+let orders = [];
+
+function updateSiteTextHandler(){
+  const about=document.getElementById('admin-about').value;
+  const contact=document.getElementById('admin-contact').value;
+  const email=document.getElementById('admin-email').value;
+  if(about){document.getElementById('about-text').textContent=about; localStorage.setItem('aboutText', about);}
+  if(contact){document.getElementById('contact-text').textContent=contact; localStorage.setItem('contactText', contact);}
+  if(email){document.getElementById('store-email').textContent=`Email: ${email}`; localStorage.setItem('storeEmail', email);}
+}
+
+function loadData(){
+  const storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+  const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+  const aboutText = localStorage.getItem('aboutText');
+  const contactText = localStorage.getItem('contactText');
+  const storeEmail = localStorage.getItem('storeEmail');
+ 
